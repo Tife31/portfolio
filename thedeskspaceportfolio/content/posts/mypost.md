@@ -14,4 +14,4 @@ This space will continulaly be developed, so stay tuned and I will show you arou
 
 
 
-[Introduction to Plaid API Project]({{< ref "posts/plaidAPI.md" >}})
+[Introduction to Plaid API Project](/posts/plaidapi/)
