@@ -1,0 +1,7 @@
+[submodule "thedeskspaceportfolio/public"]
+	path = thedeskspaceportfolio/public
+	url = https://github.com/Tife31/tife31.github.io.git
+	branch = main
+[submodule "thedeskspaceportfolio/themes/gohugo-theme-ananke"]
+	path = thedeskspaceportfolio/themes/gohugo-theme-ananke
+	url = https://github.com/theNewDynamic/gohugo-theme-ananke.git

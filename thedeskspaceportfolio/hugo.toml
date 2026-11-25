@@ -1,0 +1,6 @@
+baseURL = 'https://tife31.github.io'
+languageCode = 'en-us'
+title = 'The Desk Space'
+theme = 'gohugo-theme-ananke'
+[minify]
+  minifyOutput = false
