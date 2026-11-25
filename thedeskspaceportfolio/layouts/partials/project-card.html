@@ -1,0 +1,14 @@
+{{ $color := .Params.color | default "#ddeeff" }}
+<a class="folder-card" href="{{ .RelPermalink }}" style="{{ printf "--folder: %s;" $color | safeCSS }}">
+  <div class="folder-tab"></div>
+  <div class="folder-body">
+    {{ with .Params.category }}<span class="folder-category">{{ . }}</span>{{ end }}
+    <h3>{{ .Title }}</h3>
+    <p>{{ .Params.summary | default .Summary }}</p>
+    {{ with .Params.tech }}
+      <div class="tag-row">
+        {{ range . }}<span class="tag">{{ . }}</span>{{ end }}
+      </div>
+    {{ end }}
+  </div>
+</a>

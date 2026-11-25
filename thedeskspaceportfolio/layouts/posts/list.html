@@ -1,0 +1,62 @@
+{{ define "head" }}
+{{ partial "head-additions.html" . }}
+<style>
+  /* ── Intro ── */
+  .page-intro {
+    max-width: 880px; margin: 0 auto; padding: 64px 24px 24px;
+    display: flex; flex-direction: column; gap: 14px; color: #1c1c1c;
+  }
+  .eyebrow { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600; color: #555555; }
+  .page-intro h1 { font-family: Georgia, 'Times New Roman', serif; font-weight: 400; font-size: 48px; margin: 0; }
+  .page-intro p { max-width: 640px; font-size: 18px; line-height: 1.6; color: #444444; margin: 0; }
+
+  /* ── List of posts ── */
+  .writing-list { max-width: 880px; margin: 0 auto; padding: 24px 24px 80px; }
+  .writing-row {
+    display: flex; justify-content: space-between; align-items: center; gap: 24px;
+    padding: 24px 0; border-top: 1px solid #dddddd;
+    text-decoration: none; color: #1c1c1c; font-size: 22px;
+  }
+  .writing-row:last-child { border-bottom: 1px solid #dddddd; }
+  .writing-row div { display: flex; flex-direction: column; gap: 6px; }
+  .writing-date { font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; color: #555555; font-weight: 600; }
+  .writing-title { font-family: Georgia, serif; font-size: 24px; }
+  .writing-desc { font-size: 15px; line-height: 1.5; color: #555555; }
+  .writing-row:hover .writing-title { text-decoration: underline; text-underline-offset: 4px; }
+</style>
+{{ end }}
+
+
+{{ define "header" }}
+<header>
+  <div class="bg-black">
+    {{ partial "site-navigation.html" . }}
+  </div>
+</header>
+{{ end }}
+
+
+{{ define "main" }}
+
+  <!-- ── Intro (text comes from content/posts/_index.md) ── -->
+  <section class="page-intro">
+    {{ with .Params.eyebrow }}<span class="eyebrow">{{ . }}</span>{{ end }}
+    <h1>{{ .Title }}</h1>
+    {{ with .Params.intro }}<p>{{ . }}</p>{{ end }}
+  </section>
+
+  <!-- ── Every post, newest first ── -->
+  <section class="writing-list">
+    {{ range .Pages }}
+      <a class="writing-row" href="{{ .RelPermalink }}">
+        <div>
+          {{ if not .Date.IsZero }}<span class="writing-date">{{ .Date.Format "January 2, 2006" }}</span>{{ end }}
+          <span class="writing-title">{{ .Title }}</span>
+          <span class="writing-desc">{{ .Description | default (.Summary | plainify | truncate 140) }}</span>
+        </div>
+        <span aria-hidden="true">→</span>
+      </a>
+    {{ end }}
+  </section>
+
+{{ end }}

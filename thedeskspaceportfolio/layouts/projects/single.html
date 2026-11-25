@@ -1,0 +1,110 @@
+{{ define "head" }}
+{{ partial "head-additions.html" . }}
+<style>
+  /* ── Coloured header band ── */
+  .project-hero { background: var(--folder); border-bottom: 1.5px solid #1c1c1c; color: #1c1c1c; }
+  .project-hero-inner {
+    max-width: 880px; margin: 0 auto; padding: 48px 24px 44px;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .back-link { font-size: 14px; font-weight: 600; color: #1c1c1c; text-decoration: none; }
+  .eyebrow { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600; color: #333333; }
+  .project-hero h1 { font-family: Georgia, 'Times New Roman', serif; font-weight: 400; font-size: 46px; line-height: 1.15; margin: 0; }
+  .project-hero p { max-width: 640px; font-size: 19px; line-height: 1.6; color: #333333; margin: 0; }
+
+  /* ── Buttons ── */
+  .btn-row { display: flex; flex-wrap: wrap; gap: 12px; padding-top: 6px; }
+  .btn {
+    background: #1c1c1c; color: #ffffff; text-decoration: none;
+    padding: 12px 22px; border-radius: 8px; border: 1.5px solid #1c1c1c;
+    font-weight: 600; font-size: 15px;
+  }
+  .btn-outline { background: #ffffff; color: #1c1c1c; }
+
+  /* ── Role / Stack / Year boxes ── */
+  .project-meta { max-width: 880px; margin: 0 auto; padding: 40px 24px 0; display: flex; flex-wrap: wrap; gap: 16px; }
+  .meta-box {
+    flex: 1 1 180px; border: 1.5px solid #1c1c1c; border-radius: 10px;
+    padding: 16px 18px; display: flex; flex-direction: column; gap: 6px; color: #1c1c1c;
+  }
+  .meta-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: #555555; font-weight: 600; }
+  .meta-value { font-size: 16px; }
+
+  /* ── Screenshot ── */
+  .project-shot { max-width: 880px; margin: 32px auto 0; padding: 0 24px; }
+  .project-shot img { display: block; width: 100%; height: auto; border: 1.5px solid #1c1c1c; border-radius: 12px; }
+
+  /* ── Body text (your Markdown) ── */
+  .project-body { max-width: 880px; margin: 0 auto; padding: 16px 24px 80px; color: #333333; font-size: 17px; line-height: 1.7; }
+  .project-body h2 { font-family: Georgia, serif; font-weight: 400; font-size: 28px; color: #1c1c1c; margin: 36px 0 10px; }
+  .project-body a { color: #1c1c1c; }
+  .project-body img { max-width: 100%; }
+  .project-body code { background: #f1f1f1; padding: 2px 5px; border-radius: 4px; font-size: 0.9em; }
+  .project-body pre { background: #1c1c1c; color: #f8f8f8; padding: 16px; border-radius: 8px; overflow-x: auto; }
+  .project-body pre code { background: none; padding: 0; }
+
+  /* ── "> " sections become the boxed callout ── */
+  .project-body blockquote {
+    margin: 36px 0; padding: 4px 26px; font-style: normal;
+    background: #f8f6f2; border: 1.5px solid #1c1c1c; border-radius: 12px;
+  }
+  .project-body blockquote h2 { margin-top: 20px; }
+</style>
+{{ end }}
+
+
+{{ define "header" }}
+<header>
+  <div class="bg-black">
+    {{ partial "site-navigation.html" . }}
+  </div>
+</header>
+{{ end }}
+
+
+{{ define "main" }}
+  {{ $color := .Params.color | default "#ddeeff" }}
+
+  <!-- ── Header band in the project's folder colour ── -->
+  <div class="project-hero" style="{{ printf "--folder: %s;" $color | safeCSS }}">
+    <div class="project-hero-inner">
+      <a class="back-link" href="{{ "projects/" | relURL }}">← All projects</a>
+      {{ with .Params.category }}<span class="eyebrow">{{ . }}</span>{{ end }}
+      <h1>{{ .Title }}</h1>
+      {{ with .Params.summary }}<p>{{ . }}</p>{{ end }}
+      {{ if or .Params.repo .Params.writeup }}
+        <div class="btn-row">
+          {{ with .Params.repo }}<a class="btn" href="{{ . }}">View the code</a>{{ end }}
+          {{ with .Params.writeup }}<a class="btn btn-outline" href="{{ . | relURL }}">Read the full write-up</a>{{ end }}
+        </div>
+      {{ end }}
+    </div>
+  </div>
+
+  <!-- ── Role / Stack / Year ── -->
+  {{ if or .Params.role .Params.tech .Params.year }}
+    <section class="project-meta">
+      {{ with .Params.role }}
+        <div class="meta-box"><span class="meta-label">Role</span><span class="meta-value">{{ . }}</span></div>
+      {{ end }}
+      {{ with .Params.tech }}
+        <div class="meta-box"><span class="meta-label">Stack</span><span class="meta-value">{{ delimit . ", " }}</span></div>
+      {{ end }}
+      {{ with .Params.year }}
+        <div class="meta-box"><span class="meta-label">Year</span><span class="meta-value">{{ . }}</span></div>
+      {{ end }}
+    </section>
+  {{ end }}
+
+  <!-- ── Screenshot (screenshot.png/.jpg in the project's folder) ── -->
+  {{ with .Resources.GetMatch "screenshot.*" }}
+    <div class="project-shot">
+      <img src="{{ .RelPermalink }}" alt="Screenshot of {{ $.Title }}">
+    </div>
+  {{ end }}
+
+  <!-- ── The Markdown body ── -->
+  <article class="project-body">
+    {{ .Content }}
+  </article>
+{{ end }}

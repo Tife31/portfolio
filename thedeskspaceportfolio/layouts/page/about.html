@@ -1,0 +1,117 @@
+{{ define "head" }}
+{{ partial "head-additions.html" . }}
+<style>
+  /* ── Intro: photo + bio ── */
+  .about-wrap {
+    max-width: 1040px; margin: 0 auto; padding: 64px 24px 40px;
+    display: flex; flex-wrap: wrap; gap: 48px; align-items: flex-start; color: #1c1c1c;
+  }
+  .about-photo {
+    flex: 1 1 260px; max-width: 320px;
+    border: 1.5px solid #1c1c1c; border-radius: 12px; overflow: hidden; background: #f8f6f2;
+  }
+  .about-photo img { display: block; width: 100%; height: auto; }
+  .about-text { flex: 999 1 460px; min-width: 0; }
+  .eyebrow { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600; color: #555555; }
+  .about-text h1 {
+    font-family: Georgia, 'Times New Roman', serif; font-weight: 400;
+    font-size: 46px; line-height: 1.15; margin: 14px 0 18px;
+  }
+  .about-body p { font-size: 18px; line-height: 1.7; color: #333333; margin: 0 0 18px; }
+
+  /* ── Buttons ── */
+  .btn-row { display: flex; flex-wrap: wrap; gap: 12px; }
+  .btn {
+    background: #1c1c1c; color: #ffffff; text-decoration: none;
+    padding: 12px 22px; border-radius: 8px; border: 1.5px solid #1c1c1c;
+    font-weight: 600; font-size: 15px;
+  }
+  .btn-outline { background: transparent; color: #1c1c1c; }
+
+  /* ── Skill cards (folder colours) ── */
+  .skills {
+    max-width: 1040px; margin: 0 auto; padding: 24px 24px 48px;
+    display: flex; flex-wrap: wrap; gap: 24px;
+  }
+  .skill-card {
+    flex: 1 1 280px; background: var(--folder);
+    border: 1.5px solid #1c1c1c; border-radius: 12px; padding: 24px; color: #1c1c1c;
+  }
+  .skill-card h2 { margin: 0 0 14px; font-size: 18px; }
+  .tag-row { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag { background: #ffffff; border: 1px solid #1c1c1c; border-radius: 999px; padding: 4px 11px; font-size: 13px; }
+
+  /* ── Contact ── */
+  .contact { max-width: 1040px; margin: 0 auto; padding: 16px 24px 80px; color: #1c1c1c; }
+  .contact-inner {
+    border-top: 1px solid #dddddd; padding-top: 40px;
+    display: flex; flex-wrap: wrap; gap: 24px; justify-content: space-between; align-items: center;
+  }
+  .contact h2 { font-family: Georgia, serif; font-weight: 400; font-size: 32px; margin: 0 0 8px; }
+  .contact p { margin: 0; font-size: 17px; color: #444444; }
+</style>
+{{ end }}
+
+
+{{ define "header" }}
+<header>
+  <div class="bg-black">
+    {{ partial "site-navigation.html" . }}
+  </div>
+</header>
+{{ end }}
+
+
+{{ define "main" }}
+
+  <!-- ── Photo + bio ── -->
+  <section class="about-wrap">
+    {{ with .Resources.GetMatch "photo.*" }}
+      <div class="about-photo">
+        <img src="{{ .RelPermalink }}" alt="Portrait photo">
+      </div>
+    {{ end }}
+
+    <div class="about-text">
+      <span class="eyebrow">About me</span>
+      <h1>{{ .Params.heading | default .Title }}</h1>
+      <div class="about-body">{{ .Content }}</div>
+      <div class="btn-row">
+        {{ with .Params.resume }}
+          <a class="btn" href="{{ . | relURL }}">Download résumé (PDF)</a>
+        {{ end }}
+        <a class="btn btn-outline" href="#contact">Get in touch</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Skills (from the skills list in index.md) ── -->
+  {{ with .Params.skills }}
+    <section class="skills">
+      {{ range . }}
+        <div class="skill-card" style="{{ printf "--folder: %s;" (.color | default "#ddeeff") | safeCSS }}">
+          <h2>{{ .group }}</h2>
+          <div class="tag-row">
+            {{ range .items }}<span class="tag">{{ . }}</span>{{ end }}
+          </div>
+        </div>
+      {{ end }}
+    </section>
+  {{ end }}
+
+  <!-- ── Contact (the desk's "Say hi" label links here) ── -->
+  <section id="contact" class="contact">
+    <div class="contact-inner">
+      <div>
+        <h2>Say hi</h2>
+        {{ with .Params.looking_for }}<p>Open to {{ . }}. The rubber duck is listening.</p>{{ end }}
+      </div>
+      <div class="btn-row">
+        {{ with .Params.email }}<a class="btn btn-outline" href="mailto:{{ . }}">{{ . }}</a>{{ end }}
+        {{ with .Params.linkedin }}<a class="btn btn-outline" href="{{ . }}">LinkedIn</a>{{ end }}
+        {{ with .Params.github }}<a class="btn btn-outline" href="{{ . }}">GitHub</a>{{ end }}
+      </div>
+    </div>
+  </section>
+
+{{ end }}
